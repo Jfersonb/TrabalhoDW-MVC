@@ -1,0 +1,52 @@
+* {
+  font-family: "Times New Roman", Times, serif;
+  font-weight: 400;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ajuste na navbar para centralizar a marca */
+.navbar-brand {
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Melhor espaçamento do container principal */
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* Ajuste no botão de voltar */
+.div-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Melhor espaçamento nos textos */
+.about {
+  text-align: left;
+  line-height: 1.6;
+}
+
+/* Media Queries para melhor responsividade */
+@media (max-width: 767px) {
+  .container {
+    width: 90%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .container {
+    width: 85%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    width: 75%;
+  }
+}

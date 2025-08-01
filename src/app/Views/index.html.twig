@@ -1,0 +1,98 @@
+{% extends "Base.html.twig" %}
+
+{% block menu %}
+    {{ include('./includes/menu.html.twig') }}
+{% endblock %}
+
+
+{% block principal %}
+
+  <main class="container text-center mt-4">
+    <h2 class="fw-bold text-dark">
+      Escala dos<br /><span class="fw-bold text-primary">profissionais</span>
+    </h2>
+
+    <div class="team-cards mt-4">
+      <!-- Card 1 -->
+      <div class="card shadow-sm mb-4">
+        <img src="https://mighty.tools/mockmind-api/content/human/80.jpg" class="card-img-top rounded"
+          alt="Dr. Roberto" />
+        <div class="card-body">
+          <h5 class="card-title">Dr. Roberto</h5>
+          <p class="card-text text-muted">Geriatra</p>
+          <span class="badge bg-success">Presente</span>
+          <div class="stars mt-2">⭐ ⭐ ⭐ ⭐ ⭐ (102)</div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card shadow-sm mb-4">
+        <img src="https://mighty.tools/mockmind-api/content/human/102.jpg" class="card-img-top rounded"
+          alt="Dr. Carlos" />
+        <div class="card-body">
+          <h5 class="card-title">Dr. Carlos</h5>
+          <p class="card-text text-muted">Médico</p>
+          <span class="badge bg-success">Presente</span>
+          <div class="stars mt-2">⭐ ⭐ ⭐ ⭐ ⭐ (97)</div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card shadow-sm mb-4">
+        <img src="https://mighty.tools/mockmind-api/content/human/125.jpg" class="card-img-top rounded"
+          alt="Dr. Sandra" />
+        <div class="card-body">
+          <h5 class="card-title">Dr. Sandra</h5>
+          <p class="card-text text-muted">Enfermeira</p>
+          <span class="badge bg-success">Presente</span>
+          <div class="stars mt-2">⭐ ⭐ ⭐ ⭐ ⭐ (106)</div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card shadow-sm mb-4">
+        <img src="https://mighty.tools/mockmind-api/content/human/91.jpg" class="card-img-top rounded"
+          alt="Dr. Diego" />
+        <div class="card-body">
+          <h5 class="card-title">Dr. Diego</h5>
+          <p class="card-text text-muted">Cuidador</p>
+          <span class="badge bg-success">Presente</span>
+          <div class="stars mt-2">⭐ ⭐ ⭐ ⭐ ⭐ (72)</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="container text-center text-dark">
+      Adicionar depois
+    </p>
+
+    <!-- <div class="header-btn">
+      <a type="button" class="btn btn-outline-primary d-flex justify-content-center" href="/PHP/Logar.php">Logar</a>
+      <a type="button" class="btn btn-outline-secondary d-flex justify-content-center"
+        href="/PHP/CadastroUsuario.php">Novo Usuário</a>
+    </div> -->
+
+    {% if session['logado'] is defined and session['logado'] == true %}     
+      <div class="header-btn">
+        <a type="button" class="btn btn-outline-primary d-flex justify-content-center" href="/logout">logout</a>
+      </div>
+    {% else %}
+      <div class="header-btn">
+        <a type="button" class="btn btn-outline-primary d-flex justify-content-center" href="/logar">Logar</a>
+      </div>
+    {% endif %}
+
+
+  </main>
+
+{% endblock %}
+
+{% block rodape %}
+
+  <footer class="footer">
+    <a type="button" class="footer-btn btn btn-outline-secondary d-flex justify-content-center"
+      href="/PHP/Informacao.php">Sobre</a>
+    <!-- <p class="mb d-flex justify-content-cente">© 2025 Vida Serena. Todos os direitos reservados.</p> -->
+  </footer>
+
+{% endblock %}

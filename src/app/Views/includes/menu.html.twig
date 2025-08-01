@@ -1,0 +1,51 @@
+<header>
+  <nav class="navbar navbar-expand-lg-2 text-center bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/Index.php">Vida Serena</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Página principal</a>
+          </li>          
+          {% if session['logado'] is defined and session['logado'] == true %}
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="/logar">Logar</a>
+            </li>
+            {% endif %}
+
+          {% if session['perfil'] is defined and session['perfil'] == "admin" %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">Cadastros</a>
+              <ul class="dropdown-menu text-center">
+                <li><a class="dropdown-item" href="/PHP/CadastroUsuario.php">Novo Usuário</a></li>
+                <li><a class="dropdown-item" href="/medicamento/cadastro">Cadastro Medicamentos</a></li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+              </ul>
+            </li>
+            {% endif %}
+
+            {% if session['perfil'] is defined and session['perfil'] == "usuario" %}
+            <li class="nav-item">
+              <a class="nav-link" href="/PHP/ListaPacientes.php">Lista de Pacientes</a>
+            </li>
+            {% endif %}
+
+          <li class="nav-item">
+            <a class="nav-link" href="/PHP/Informacao.php">Sobre o sistema</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>

@@ -1,0 +1,44 @@
+{% extends "Base.html.twig" %}
+
+{% block main %}
+
+	<h1 class="text-center">Usuários cadastrados</h1>
+
+	<a class="btn btn-primary mb-2" href="/users/create">Cadastrar usuário</a>
+
+	{% if users|length <= 0 %}
+
+		<div class="alert alert-primary" role="alert">
+			Não há usuários cadastrados.
+		</div>
+
+	{% else %}
+
+		<table class="table table-striped-columns">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Nome</th>
+					<th>Email</th>
+					<th>Ações</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for user in users %}
+					<tr>
+						<td>{{ user.id }}</td>
+						<td>{{ user.name }}</td>
+						<td>{{ user.email }}</td>
+						<td>
+							<a href="/users/{{user.id}}" class="btn btn-success mr-1">Ver</a>
+							<a href="/users/{{user.id}}/update" class="btn btn-primary mr-1">Editar</a>
+							<a href="/users/{{user.id}}/delete" class="btn btn-danger">Excluir</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+	{% endif %}
+
+{% endblock %}

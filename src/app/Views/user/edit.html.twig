@@ -1,0 +1,39 @@
+{% extends "Base.html.twig" %}
+
+{% block main %}
+
+	<h1 class="text-center">Alteração de Usuário</h1>
+
+	<form action="/users/{{ user.id }}/update" method="post" enctype='multipart/form-data'>
+
+		<div class="row">
+			<div class="col-12 col-md-6">
+				<label for="name" class="form-label">Nome</label>
+				<input type="text" name="name" value="{{ user.name }}" class="form-control" required placeholder="Informe o nome" aria-label="Nome">
+			</div>
+			<div class="col-12 col-md-6">
+				<label for="email" class="form-label">Email</label>
+				<input type="text" name="email" value="{{ user.email }}" class="form-control" required placeholder="Informe o email" aria-label="Email">
+			</div>
+			<div class="col-12 col-md-6">
+				<label for="password" class="form-label">Senha</label>
+				<input type="password" name="password" class="form-control" placeholder="Informe a senha" aria-label="Senha">
+			</div>
+			<div class="col-12 col-md-6">
+				<label for="image" class="form-label">Foto de perfil</label>
+				<input type="file" name="image" class="form-control">
+			</div>
+		</div>
+
+		{% if user.path_image %}
+			<img src="{{user.path_image}}" style="max-width:150px" class="img-thumbnail m-3 mx-auto d-block">
+		{% endif %}
+
+		<div class="row">
+			<div class="col col-12 text-center mt-3">
+				<button type="submit" class="btn btn-primary">Salvar</button>
+			</div>
+		</div>
+	</form>
+
+{% endblock %}

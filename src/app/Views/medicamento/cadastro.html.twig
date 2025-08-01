@@ -1,0 +1,69 @@
+{% extends "Base.html.twig" %}
+
+{% block menu %}
+    {{ include('./includes/menu.html.twig') }}
+{% endblock %}
+
+
+{% block principal %}
+<main class="container mt-4">
+    <h2>Cadastro de Medicamentos</h2>
+    <form id="formMedicamento" method="POST" action="/medicamento/cadastro" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="nomeMedicamento" class="form-label">Nome do Medicamento</label>
+        <input type="text" name="nomeMedicamento" class="form-control" id="nomeMedicamento" required />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Tipo de Medicamento</label>
+        <div class="form-check">
+          <input class="form-check-input tipo-medicamento" type="radio" id="semTarja" name="tipoMedicamento"
+            value="Sem tarja" required />
+          <label class="form-check-label" for="semTarja">Sem tarja</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input tipo-medicamento" type="radio" id="tarjaAmarela" name="tipoMedicamento"
+            value="Tarja amarela" required />
+          <label class="form-check-label" for="tarjaAmarela">Tarja amarela</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input tipo-medicamento" type="radio" id="tarjaVermelha" name="tipoMedicamento"
+            value="Tarja vermelha" required />
+          <label class="form-check-label" for="tarjaVermelha">Tarja vermelha</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input tipo-medicamento" type="radio" id="tarjaPreta" name="tipoMedicamento"
+            value="Tarja preta" required/>
+          <label class="form-check-label" for="tarjaPreta">Tarja preta</label>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="quantidadeCaixas" class="form-label">Quantidade de caixas</label>
+        <input type="number" name="quantidadeCaixas" class="form-control" id="quantidadeCaixas" min="1" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="quantidadePorCaixa" class="form-label">Quantidade por caixa</label>
+        <input type="number" name="quantidadePorCaixa" class="form-control" id="quantidadePorCaixa" min="1" required />
+      </div>
+
+      <div class="input mb-3">
+        <input type="file" name="notaFiscal" class="form-control" id="inputGroupFile02" accept=".pdf,.jpg,.jpeg,.png"
+          required />
+      </div>
+      <p>Selecione a nota fiscal de compra</p>
+      <div class="header-btn">
+        <button type="submit" class="btn btn-outline-primary">
+          Solicitar cadastramento
+        </button>
+        <a class="btn btn-outline-warning" href="/Index.php">Voltar</a>
+      </div>
+    </form>
+  </main>
+
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

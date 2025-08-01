@@ -1,0 +1,78 @@
+/* Reset básico */
+body {
+  background-color: #f4f8fb;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Container principal */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Título */
+h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
+
+/* Formulário de busca */
+form .input-group {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Tabela */
+.table-responsive {
+  margin-top: 20px;
+}
+
+.table th {
+  background-color: #e9ecef;
+  color: #495057;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.table td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* Botões */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Alerta */
+.alert-warning {
+  text-align: center;
+}
+
+/* Responsivo extra */
+@media (max-width: 768px) {
+  .table th, .table td {
+    font-size: 0.9rem;
+  }
+
+  form .input-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  form .input-group input,
+  form .input-group button,
+  form .input-group a {
+    width: 100%;
+  }
+}

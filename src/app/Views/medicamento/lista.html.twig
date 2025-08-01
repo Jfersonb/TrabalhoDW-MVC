@@ -1,0 +1,54 @@
+{% extends "Base.html.twig" %}
+
+{% block menu %}
+    {{ include('./includes/menu.html.twig') }}
+{% endblock %}
+
+
+{% block principal %}
+    <main class="container mt-4">
+        <h2 class="fw-bold text-dark text-center">Medicamentos cadastrados</h2>
+
+        <form method="GET" class="mb-3">
+            <div class="input-group">
+                <input type="text" name="busca" class="form-control" placeholder="Buscar por medicamento..."
+                    value="{{ busca }}">
+                <button class="btn btn-outline-primary" type="submit">Buscar</button>
+                <a href="/medicamento/lista" class="btn btn-outline-secondary">Limpar</a>
+            </div>
+        </form>
+
+       {% if medicamentos|length <= 0 %}
+            <div class="alert alert-warning">Nenhum medicamento encontrado.</div>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nome</th>
+                            <th>Tipo</th>
+                            <th>Qtd</th>
+                            <th>Qtd/Cx</th>
+                            <th>Nota</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       {% for med in medicamentos %}
+                            <tr>
+                                <td>{{ med.nomeMedicamento }}</td>
+                                <td>{{ med.tipoMedicamento }}</td>
+                                <td>{{ med.quantDeCaixa }}</td>
+                                <td>{{ med.quantPorCaixa }}</td>
+                                <td><a href="/public/arquivos/{{ med.notaFiscal }}" target="_blank">Link</a></td>
+                                <td>+</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+
+        <a href="/Index.php" class="btn btn-outline-warning mt-3">Voltar</a>
+    </main>
+{% endblock %}

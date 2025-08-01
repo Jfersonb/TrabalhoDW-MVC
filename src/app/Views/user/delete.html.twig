@@ -1,0 +1,19 @@
+{% extends "Base.html.twig" %}
+
+{% block main %}
+
+	<form action="/users/{{ user.id }}/delete" method="post">
+
+		<div class="row">
+
+			<h2 class="text-center">
+				Confirma a exclusão do usuário:
+				<strong class="text-bg-danger px-3">{{ user.name }}</strong>?
+			</h2>
+			<div class="col col-12 text-center mt-3">
+				<button type="submit" class="btn btn-danger">Excluir</button>
+			</div>
+		</div>
+	</form>
+
+{% endblock %}

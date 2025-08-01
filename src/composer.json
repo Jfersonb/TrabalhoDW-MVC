@@ -1,0 +1,18 @@
+{
+    "name": "mateus/mvc_php",
+    "description": "Projeto base de aplicações PHP+MySql com arquitetura MVC utilizando containers docker",
+    "require": {
+        "twig/twig": "^3.21"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mateus Nunes",
+            "email": "mateus.santos@ifto.edu.br"
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{% extends "Base.html.twig" %}
+
+{% block main %}
+
+<h1 class="text-center">Cadastro de Usuário</h1>
+
+<form action="/users/create" method="post" enctype='multipart/form-data'>
+
+<div class="row">
+  <div class="col-12 col-md-6">
+    <label for="name" class="form-label">Nome</label>
+    <input type="text" name="name" class="form-control" required placeholder="Informe o nome" aria-label="Nome">
+  </div>
+  <div class="col-12 col-md-6">
+    <label for="email" class="form-label">Email</label>
+    <input type="text" name="email" class="form-control" required placeholder="Informe o email" aria-label="Email">
+  </div>
+  <div class="col-12 col-md-6">
+    <label for="password" class="form-label">Senha</label>
+    <input type="password" name="password" class="form-control" required placeholder="Informe a senha" aria-label="Senha">
+  </div>
+  <div class="col-12 col-md-6">
+    <label for="image" class="form-label">Foto de perfil</label>
+    <input type="file" name="image" class="form-control">
+  </div>
+
+  <div class="col col-12 text-center mt-3">
+    <button type="submit" class="btn btn-primary">Cadastrar</button>
+  </div>
+</div>
+</form>
+
+{% endblock %}
