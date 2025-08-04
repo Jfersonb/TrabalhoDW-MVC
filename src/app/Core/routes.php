@@ -49,9 +49,9 @@ get('/medicamento/lista', function(){
  $controller->lista();
 });
 
-get('/informacoes', function () {
-  $controller = new IformacaoController();
-  $controller->informacoes();
+get('/informacao', function () {
+  $controller = new UserController();
+  $controller->informacao();
 });
 
 get('/users/create', function () {

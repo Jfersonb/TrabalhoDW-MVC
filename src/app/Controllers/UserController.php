@@ -227,4 +227,14 @@ class UserController
             }
         }
     }
+
+    public function informacao($mensagemErro = ""){
+        $loader = new FilesystemLoader(__DIR__ . "/../Views");
+        $twig = new Environment($loader);
+        $twig->addGlobal('session', $_SESSION);
+
+        echo $twig->render("user/informacao.html.twig", [
+            "titulo" => "Informações sobre o sistema"
+        ]);
+    }
 }
