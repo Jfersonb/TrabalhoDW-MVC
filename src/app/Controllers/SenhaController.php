@@ -4,17 +4,21 @@ namespace App\Controllers;
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use App\Services\FileUploadService;
 use App\Models\Senha;
 use PDOException;
 
-class ResetSenhaController
-{
+class SenhaController{
+    
     public function formulario()
     {
         $loader = new FilesystemLoader(__DIR__ . "/../Views");
         $twig = new Environment($loader);
+        $twig->addGlobal('session', $_SESSION);
 
-        echo $twig->render("resetsenha/formulario.html.twig", [
+        
+
+        echo $twig->render("senha/reset.html.twig", [
             "titulo" => "Resetar senha"
         ]);
     }

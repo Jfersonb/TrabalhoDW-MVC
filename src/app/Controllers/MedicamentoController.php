@@ -6,6 +6,7 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use App\Services\FileUploadService;
 use App\Models\Medicamento;
+use PDOException;
 
 class MedicamentoController{
 
