@@ -3,6 +3,7 @@
 use App\Controllers\AppController;
 use App\Controllers\UserController;
 use App\Controllers\MedicamentoController;
+use App\Services\ServicoEmail;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/router.php';
@@ -84,9 +85,8 @@ post('/users/$id/delete', function ($id) {
   $controller->delete($id);
 });
 
-get('/users/$id', function ($id) {
-  $controller = new UserController();
-  $controller->view($id);
+get('/teste', function () {
+  ServicoEmail::enviar("jeferson.silva2@estudante.ifto.edu.br", "Olá Teste", "Teste de envio");
 });
 
 // For GET or POST

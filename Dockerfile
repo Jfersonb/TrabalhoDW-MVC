@@ -20,6 +20,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   freetds-bin \
   tdsodbc
   
+  
+RUN docker-php-ext-install sockets
+
 RUN docker-php-ext-configure gd --with-jpeg --with-freetype
 
 RUN docker-php-ext-configure pdo_dblib --with-libdir=/lib/x86_64-linux-gnu

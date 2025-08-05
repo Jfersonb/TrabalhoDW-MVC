@@ -1,0 +1,20 @@
+{
+    "name": "mateus/mail_server",
+    "version": "1.0.0",
+    "description": "scripts para envio de email e conexão com o broker de mensagens(rabbitmq)",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mateus Nunes",
+            "email": "mateus.santos@ifto.edu.br"
+        }
+    ],
+    "require": {
+        "php-amqplib/php-amqplib": "^3.2",
+        "phpmailer/phpmailer": "^6.10"
+    }
+}

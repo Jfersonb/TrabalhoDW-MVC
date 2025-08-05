@@ -2,7 +2,8 @@
     "name": "mateus/mvc_php",
     "description": "Projeto base de aplicações PHP+MySql com arquitetura MVC utilizando containers docker",
     "require": {
-        "twig/twig": "^3.21"
+        "twig/twig": "^3.21",
+        "php-amqplib/php-amqplib": "^3.7"
     },
     "autoload": {
         "psr-4": {

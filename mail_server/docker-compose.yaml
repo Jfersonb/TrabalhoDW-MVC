@@ -1,0 +1,15 @@
+services:
+  php-mail-server:
+    build: .
+    volumes:
+      - ./src:/app
+    networks:
+      - rabbitmq_network # Conecta o php-mail-server à mesma rede
+    environment:
+      # Variável de ambiente para o script PHP usar
+      # O valor é o "container_name" definido no docker-compose.yaml do rabbitmq
+      RABBITMQ_HOST: rabbitmq
+
+networks:
+  rabbitmq_network:
+    external: true
