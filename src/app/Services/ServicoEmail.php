@@ -26,7 +26,6 @@ $channel->queue_declare('fila_emails', false, true, false, false);
 // $to = $destinatario;
 // $subject = $titulo;
 // $body = $mensagem;
-
 // Dados do e-mail
 $email = [
     'to' => $destinatario,

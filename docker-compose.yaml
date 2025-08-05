@@ -5,6 +5,12 @@ services:
       - ./src:/var/www/html
     ports:
       - 8080:80
+    networks:
+      - rabbitmq_network # Conecta o sistema à mesma rede do rabbitmq(broker de mensagens)
+    environment:
+      # Variável de ambiente para o script PHP usar
+      # O valor é o "container_name" definido no docker-compose.yaml do rabbitmq
+      RABBITMQ_HOST: rabbitmq
 
   db:
     image: mysql
@@ -21,3 +27,7 @@ services:
       - 8081:80
     environment:
       - PMA_ARBITRARY=1
+
+networks:
+  rabbitmq_network:
+    external: true
