@@ -55,9 +55,9 @@ get('/informacao', function () {
   $controller->informacao();
 });
 
-get('/users/create', function () {
-  $controller = new UserController();
-  $controller->create();
+get('/senha/reset', function () {
+  $controller = new SenhaController();
+  $controller->reset();
 });
 
 post('/users/create', function () {

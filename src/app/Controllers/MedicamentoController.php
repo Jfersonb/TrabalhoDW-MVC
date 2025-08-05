@@ -70,7 +70,7 @@ class MedicamentoController{
 
         } catch (PDOException $e) {
             error_log("Erro ao cadastrar medicamento: " . $e->getMessage());
-            header("Location: /PHP/CadastroMedicamentos.php?msg=erro");
+            header("Location: /medicamento/cadastro?msg=erro");
             exit;
         }
     }
