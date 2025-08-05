@@ -9,7 +9,7 @@ create table cadastroUsers(
     telefone varchar(15) not null unique,
     email varchar(250) not null unique,
     senha varchar(100) not null,
-    arquivo varchar(250) not null,
+    arquivo varchar(250),
     perfil varchar(10)
 );
 INSERT INTO cadastroUsers (nome, cpf, telefone, email, senha, perfil)

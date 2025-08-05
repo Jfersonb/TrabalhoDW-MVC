@@ -1,33 +1,56 @@
+version: '3.8'
 services:
   php:
     build: .
+    ports:
+      - "8000:80"
     volumes:
       - ./src:/var/www/html
-    ports:
-      - 8080:80
     networks:
+      - app-network
       - rabbitmq_network # Conecta o sistema à mesma rede do rabbitmq(broker de mensagens)
+    depends_on:
+      - db
     environment:
       # Variável de ambiente para o script PHP usar
       # O valor é o "container_name" definido no docker-compose.yaml do rabbitmq
       RABBITMQ_HOST: rabbitmq
-
+    
   db:
-    image: mysql
+    image: mariadb:11.4
     restart: always
-    ports:
-      - 9306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: vidaSerena
+    ports:
+      - 3308:3306
+    volumes:
+      - ./src/SQL:/docker-entrypoint-initdb.d
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
 
   phpmyadmin:
-    image: phpmyadmin
+    image: phpmyadmin:5.2
     restart: always
-    ports:
-      - 8081:80
     environment:
-      - PMA_ARBITRARY=1
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+volumes:
+  db_data:
 
 networks:
+  app-network:
+    driver: bridge
   rabbitmq_network:
     external: true
