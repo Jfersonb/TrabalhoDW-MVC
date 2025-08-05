@@ -1,0 +1,37 @@
+{% extends 'Base.html.twig' %}
+{% block menu %}
+  {{ include('./includes/menu.html.twig') }}
+{% endblock %}
+{% block principal %}
+  <main class="container mt-4">
+    <form id="resetForm" method="post" action="">
+      <div class="form-group">
+        <label for="exampleInputEmail1">E-mail</label>
+        <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Informe seu e-mail cadastrado" />
+      </div>
+
+      <div class="div-button d-flex justify-content-center">
+        <button type="submit" class="btn btn-outline-primary">Solicitar nova Senha</button>
+      </div>
+
+      <div class="div-button d-flex justify-content-center">
+        <a type="button" class="btn btn-outline-warning" href="/PHP/Logar.php">Voltar</a>
+      </div>
+    </form>
+  </main>
+{% endblock %}
+{% block js %}
+  <script>
+    document.getElementById('resetForm').addEventListener('submit', function (e) {
+      const emailInput = document.getElementById('exampleInputEmail1')
+      const email = emailInput.value.trim()
+    
+      if (email === '') {
+        e.preventDefault()
+        alert('Por favor, digite seu e-mail.')
+      }
+    })
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+{% endblock %}

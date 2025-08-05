@@ -23,7 +23,7 @@ services:
       MARIADB_ROOT_PASSWORD: root
       MARIADB_DATABASE: vidaSerena
     ports:
-      - 3308:3306
+      - 3307:3306
     volumes:
       - ./src/SQL:/docker-entrypoint-initdb.d
       - db_data:/var/lib/mysql
