@@ -4,7 +4,7 @@
 {% endblock %}
 {% block principal %}
   <main class="container mt-4">
-    <form id="resetForm" method="post" action="">
+    <form id="resetForm" method="post" action="/senha/reset">
       <div class="form-group">
         <label for="exampleInputEmail1">E-mail</label>
         <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Informe seu e-mail cadastrado" />
@@ -15,7 +15,7 @@
       </div>
 
       <div class="div-button d-flex justify-content-center">
-        <a type="button" class="btn btn-outline-warning" href="/Logar">Voltar</a>
+        <a type="button" class="btn btn-outline-warning" href="/logar">Voltar</a>
       </div>
     </form>
   </main>

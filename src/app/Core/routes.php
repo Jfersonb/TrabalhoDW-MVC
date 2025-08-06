@@ -3,7 +3,8 @@
 use App\Controllers\AppController;
 use App\Controllers\UserController;
 use App\Controllers\MedicamentoController;
-use App\Services\ServicoEmail;
+// use App\Services\ServicoEmail;
+use App\Controllers\SenhaController;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/router.php';
@@ -57,7 +58,13 @@ get('/informacao', function () {
 
 get('/senha/reset', function () {
   $controller = new SenhaController();
-  $controller->reset();
+  $controller->resetSenha();
+  //ServicoEmail::enviar("jeferson.silva2@estudante.ifto.edu.br", "Olá Teste", "Teste de envio");
+});
+
+post('/senha/reset', function () {
+    $controller = new SenhaController();
+    $controller->processaReset();
 });
 
 post('/users/create', function () {
@@ -85,9 +92,6 @@ post('/users/$id/delete', function ($id) {
   $controller->delete($id);
 });
 
-get('/teste', function () {
-  ServicoEmail::enviar("jeferson.silva2@estudante.ifto.edu.br", "Olá Teste", "Teste de envio");
-});
 
 // For GET or POST
 // The 404.php which is inside the views folder will be called

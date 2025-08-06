@@ -4,19 +4,16 @@ namespace App\Controllers;
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-use App\Services\FileUploadService;
 use App\Models\Senha;
 use PDOException;
 
-class SenhaController{
+class SenhaController {
     
-    public function formulario()
+    public function resetSenha()
     {
         $loader = new FilesystemLoader(__DIR__ . "/../Views");
         $twig = new Environment($loader);
         $twig->addGlobal('session', $_SESSION);
-
-        
 
         echo $twig->render("senha/reset.html.twig", [
             "titulo" => "Resetar senha"
@@ -30,15 +27,15 @@ class SenhaController{
             $novaSenhaPadrao = '123senha';
 
             try {
-                $senha = new senha();
-                $senha = $senha->buscarPorEmail($email);
+                $senhaModel = new Senha(); // Corrigido o nome da classe
+                $usuario = $senhaModel->buscarPorEmail($email);
 
-                if ($senha) {
-                    $senha->resetarSenha($email, $novaSenhaPadrao);
+                if ($usuario) {
+                    $senhaModel->resetarSenha($email, $novaSenhaPadrao);
                     header("Location: /login?msg=sucesso");
                     exit;
                 } else {
-                    header("Location: /reset?msg=email-nao-encontrado");
+                    header("Location: /reset?msg=usuario-ou-email-nao-encontrado");
                     exit;
                 }
             } catch (PDOException $e) {

@@ -14,7 +14,7 @@ create table cadastroUsers(
 );
 INSERT INTO cadastroUsers (nome, cpf, telefone, email, senha, perfil)
 VALUES 
-('Jeferon Silva', '11111111111', '63 900000001', 'silva@email.com', SHA2('senha123', 256), 'admin'),
+('Jeferon Silva', '11111111111', '63 900000001', 'jeferson.silva2@estudante.ifto.edu.br', SHA2('senha123', 256), 'admin'),
 ('Bruno Lima', '22222222222', '63 900000002', 'bruno@email.com', SHA2('senha123', 256), 'admin'),
 ('Carlos Silva', '33333333333', '63 900000003', 'carlos@email.com', SHA2('senha123', 256), 'usuario'),
 ('Daniela Ramos', '44444444444', '63 900000004', 'daniela@email.com', SHA2('senha123', 256), 'usuario'),
