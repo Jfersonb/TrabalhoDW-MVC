@@ -41,7 +41,10 @@
                                 <td>{{ med.quantDeCaixa }}</td>
                                 <td>{{ med.quantPorCaixa }}</td>
                                 <td><a href="/public/arquivos/{{ med.notaFiscal }}" target="_blank">Link</a></td>
-                                <td>+</td>
+                                <td>
+                                <button class="btn btn-primary">Editar</button>
+                                <button class="btn btn-danger">Excluir</button>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
