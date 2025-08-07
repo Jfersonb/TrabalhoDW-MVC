@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Services;
-
-//Importa as dependências
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
