@@ -1,4 +1,3 @@
 /src/vendor/
-
-touch src/public/imagens/.gitkeep
-touch src/public/arquivos/.gitkeep
+src/public/imagens/*
+src/public/arquivos/*
