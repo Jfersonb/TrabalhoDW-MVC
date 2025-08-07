@@ -41,7 +41,9 @@ class UserController
     {
         $name = $_POST['name'];
         $email = $_POST['email'];
-        $pass = $_POST['password'];
+        //Caso continui dando erro voltar
+        // $pass = $_POST['password'];
+        $pass = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $foto = isset($_FILES["image"]) ? $_FILES["image"] : null;
 
         if (is_array($foto)) {
@@ -95,7 +97,9 @@ class UserController
 
         $name = $_POST['name'];
         $email = $_POST['email'];
-        $pass = $_POST['password'];
+        //Caso continui dando erro voltar
+        //$pass = $_POST['password'];
+        $pass = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $foto = isset($_FILES["image"]) ? $_FILES["image"] : null;
 
         $userModel = new User();
@@ -210,9 +214,13 @@ class UserController
 
                 if ($User) {
                     // Verificar a senha usando SHA2
-                    $senhaDigitadaHash = hash("sha256", $senhaDigitada);
+                    //Caso continui dando erro voltar
+                    //$senhaDigitadaHash = hash("sha256", $senhaDigitada);
 
-                    if ($senhaDigitadaHash === $User["senha"]) {
+                    //Caso continui dando erro voltar
+                    //if($senhaDigitadaHash === $User["senha"]){
+                    if (password_verify($senhaDigitada, $User["senha"])) {
+
                         $_SESSION["logado"] = true;
                         $_SESSION["id"] = $User["id"];
                         $_SESSION["nome"] = $User["nome"];
