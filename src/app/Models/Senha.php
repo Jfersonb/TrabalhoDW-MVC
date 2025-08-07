@@ -2,8 +2,6 @@
 namespace App\Models;
 
 use App\Models\BD;
-use App\Services\FileUploadService;
-use Exception;
 use PDO;
 
 class Senha{
