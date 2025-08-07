@@ -40,7 +40,7 @@ class SenhaController {
                     $_SESSION['mensagem'] = "Nova senha enviada para: $email";
                     header("Location: /senha/reset");
                 } else {
-                    $_SESSION['mensagem'] = "Nova senha enviada para: $email";
+                    $_SESSION['mensagem'] = "Algo deu errado, tente novamente!";
                     header("Location: /senha/reset");
                 }
                 exit;

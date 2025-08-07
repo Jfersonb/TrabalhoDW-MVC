@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Services\ImageUploadService;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use PDOException;
 
 class UserController
 {
@@ -24,9 +25,7 @@ class UserController
             "title" => "Usuários cadastrados",
             "users" => $users
         ]);
-
     }
-
 
     public function create()
     {
@@ -45,9 +44,9 @@ class UserController
         $pass = $_POST['password'];
         $foto = isset($_FILES["image"]) ? $_FILES["image"] : null;
 
-        if(is_array($foto)){
+        if (is_array($foto)) {
             $foto = $_FILES["image"]['size'] > 0 ? $_FILES["image"] : null;
-        }        
+        }
 
         $userModel = new User();
 
@@ -174,27 +173,32 @@ class UserController
         exit();
     }
 
-    public function logout(){
+    public function logout()
+    {
         session_unset();
 
         header("Location: /");
         exit();
     }
 
-    public function logar($mensagemErro = ""){
+    public function logar($mensagemErro = "")
+    {
         $loader = new FilesystemLoader(__DIR__ . "/../Views");
         $twig = new Environment($loader);
         $twig->addGlobal('session', $_SESSION);
 
         echo $twig->render("user/logar.html.twig", [
             "titulo" => "Acessar o sistema",
-            "mensagemErro"=> $mensagemErro
+            "mensagemErro" => $mensagemErro
         ]);
     }
 
-    public function processaLogin(){
-        
-    $mensagemErro = "";
+    public function processaLogin()
+    {
+
+        $loader = new FilesystemLoader(__DIR__ . "/../Views");
+        $twig = new Environment($loader);
+        $twig->addGlobal('session', $_SESSION);
 
         if (isset($_POST["email"], $_POST["password"])) {
             $email = trim($_POST["email"]);
@@ -202,7 +206,6 @@ class UserController
 
             try {
                 $userModel = new User();
-
                 $User = $userModel->getByEmail($email);
 
                 if ($User) {
@@ -228,7 +231,8 @@ class UserController
         }
     }
 
-    public function informacao($mensagemErro = ""){
+    public function informacao($mensagemErro = "")
+    {
         $loader = new FilesystemLoader(__DIR__ . "/../Views");
         $twig = new Environment($loader);
         $twig->addGlobal('session', $_SESSION);

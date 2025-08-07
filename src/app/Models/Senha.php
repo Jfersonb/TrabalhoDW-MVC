@@ -9,7 +9,7 @@ class Senha{
     public function buscarPorEmail($email)
     {
         $conn = BD::getConnection();
-        $sql = $conn->prepare("SELECT id FROM cadastroUsers WHERE email = :email");
+        $sql = $conn->prepare("SELECT * FROM cadastroUsers WHERE email = :email");
         $sql->bindValue(":email", $email);
         $sql->execute();
         return $sql->fetch(PDO::FETCH_ASSOC);
