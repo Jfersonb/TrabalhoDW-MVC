@@ -98,7 +98,7 @@ create table cadastroMedicamentos(
     tipoMedicamento enum('Sem tarja', 'Tarja amarela', 'Tarja vermelha', 'Tarja preta') not null,
     quantDeCaixa int not null,
     quantPorCaixa int not null,
-    notaFiscal varchar(250) not null,
+    notaFiscal varchar(250),
     foreign key(id_usuario) references cadastroUsers(id)
 );
 insert into cadastroMedicamentos(id_usuario ,nomeMedicamento, tipoMedicamento, quantDeCaixa, quantPorCaixa)
