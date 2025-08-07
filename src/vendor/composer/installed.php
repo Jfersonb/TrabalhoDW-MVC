@@ -3,7 +3,7 @@
         'name' => 'mateus/mvc_php',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '4f6c5c7dba0d9f0c0ce6d88c8252dcc4bfa6e5e3',
+        'reference' => '1f90d6cc6b4007e28914448538ce2d6614451c85',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'mateus/mvc_php' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '4f6c5c7dba0d9f0c0ce6d88c8252dcc4bfa6e5e3',
+            'reference' => '1f90d6cc6b4007e28914448538ce2d6614451c85',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
