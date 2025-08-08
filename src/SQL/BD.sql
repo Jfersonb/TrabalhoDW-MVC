@@ -14,11 +14,11 @@ create table cadastroUsers(
 );
 INSERT INTO cadastroUsers (nome, cpf, telefone, email, senha, perfil)
 VALUES 
-('Jeferon Silva', '11111111111', '63 900000001', 'jeferson.silva2@estudante.ifto.edu.br', SHA2('senha123', 256), 'admin'),
-('Bruno Silva', '22222222222', '63 900000002', 'bruno.silva@email.com', SHA2('senha123', 256), 'admin'),
-('Júlio Silva', '33333333333', '63 900000003', 'julio.silva@email.com', SHA2('senha123', 256), 'usuario'),
-('Daniela Ramos', '44444444444', '63 900000004', 'daniela.ramos@email.com', SHA2('senha123', 256), 'usuario'),
-('Ana Souza', '55555555555', '63 900000005', 'ana.souza@email.com', SHA2('senha123', 256), 'usuario');
+('Jeferon Silva', '11111111111', '63 900000001', 'jeferson.silva2@estudante.ifto.edu.br', SHA2(CONCAT('senha123', 'salto1'), 256), 'admin'),
+('Bruno Silva', '22222222222', '63 900000002', 'bruno.silva@email.com', SHA2(CONCAT('senha123', 'salto2'), 256), 'admin'),
+('Júlio Silva', '33333333333', '63 900000003', 'julio.silva@email.com', SHA2(CONCAT('senha123', 'salto3'), 256), 'usuario'),
+('Daniela Ramos', '44444444444', '63 900000004', 'daniela.ramos@email.com', SHA2(CONCAT('senha123', 'salto4'), 256), 'usuario'),
+('Ana Souza', '55555555555', '63 900000005', 'ana.souza@email.com', SHA2(CONCAT('senha123', 'salto5'), 256), 'usuario');
 
 create table cadastroFamilia(
     id int auto_increment primary key,
