@@ -21,34 +21,44 @@ get('/', function () {
   $controller->index();
 });
 
-get('/logout', function(){
+get('/logout', function () {
   $controller = new UserController();
   $controller->logout();
 });
 
-get('/logar', function(){
+get('/logar', function () {
   $controller = new UserController();
   $controller->logar();
 });
 
-post('/logar', function(){
+post('/logar', function () {
   $controller = new UserController();
   $controller->processaLogin();
 });
 
-get('/medicamento/cadastro', function(){
- $controller = new MedicamentoController();
- $controller->cadastro();
+get('/cadastro', function ($id) {
+  $controller = new UserController();
+  $controller->cadastro($id);
 });
 
-post('/medicamento/cadastro', function(){
- $controller = new MedicamentoController();
- $controller->processaCadastro();
+post('/cadastro', function () {
+  $controller = new UserController();
+  $controller->processaCadastro();
 });
 
-get('/medicamento/lista', function(){
- $controller = new MedicamentoController();
- $controller->lista();
+get('/medicamento/cadastro', function () {
+  $controller = new MedicamentoController();
+  $controller->cadastro();
+});
+
+post('/medicamento/cadastro', function () {
+  $controller = new MedicamentoController();
+  $controller->processaCadastro();
+});
+
+get('/medicamento/lista', function () {
+  $controller = new MedicamentoController();
+  $controller->lista();
 });
 
 get('/informacao', function () {
@@ -63,33 +73,8 @@ get('/senha/reset', function () {
 });
 
 post('/senha/reset', function () {
-    $controller = new SenhaController();
-    $controller->processaReset();
-});
-
-post('/users/create', function () {
-  $controller = new UserController();
-  $controller->insert();
-});
-
-get('/users/$id/update', function ($id) {
-  $controller = new UserController();
-  $controller->edit($id);
-});
-
-post('/users/$id/update', function ($id) {
-  $controller = new UserController();
-  $controller->update($id);
-});
-
-get('/users/$id/delete', function ($id) {
-  $controller = new UserController();
-  $controller->confirmDelete($id);
-});
-
-post('/users/$id/delete', function ($id) {
-  $controller = new UserController();
-  $controller->delete($id);
+  $controller = new SenhaController();
+  $controller->processaReset();
 });
 
 

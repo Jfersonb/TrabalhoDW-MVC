@@ -55,7 +55,7 @@
 
     {% if session['perfil'] is defined and session['perfil'] == 'admin' %}
       <div class="header-btn mb-2">
-        <a type="button" class="btn btn-outline-success d-flex justify-content-center" href="#">Cadastrar novo Usuário</a>
+        <a type="button" class="btn btn-outline-success d-flex justify-content-center" href="/cadastro">Cadastrar novo Usuário</a>
       </div>
       <div class="header-btn mb-2">
         <a type="button" class="btn btn-outline-success d-flex justify-content-center" href="/medicamento/cadastro">Cadastrar Medicamentos</a>
@@ -72,6 +72,12 @@
     {% else %}
       <div class="header-btn">
         <a type="button" class="btn btn-outline-success d-flex justify-content-center" href="/logar">Logar</a>
+      </div>
+    {% endif %}
+
+    {% if session['perfil'] is defined and session['perfil'] == 'usuario' %}
+      <div class="header-btn">
+        <a type="button" class="btn btn-outline-warning d-flex justify-content-center" href="#">Lista de Pacientes</a>
       </div>
     {% endif %}
   </main>

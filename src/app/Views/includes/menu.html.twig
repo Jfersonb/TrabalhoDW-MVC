@@ -26,7 +26,7 @@
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                 aria-expanded="false">Cadastros</a>
               <ul class="dropdown-menu text-center">
-                <li><a class="dropdown-item" href="/PHP/CadastroUsuario.php">Novo Usuário</a></li>
+                <li><a class="dropdown-item" href="/cadastro">Novo Usuário</a></li>
                 <li><a class="dropdown-item" href="/medicamento/cadastro">Cadastro Medicamentos</a></li>
               </ul>
               <li><a class="dropdown-item" href="/medicamento/lista">Lista de Medicamentos</a></li>
@@ -34,7 +34,7 @@
             {% endif %}
 
             {% if session['perfil'] is defined and session['perfil'] == "usuario" %}
-            <li class="nav-item"><a class="nav-link" href="/ListaPacientes">Lista de Pacientes</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Lista de Pacientes</a></li>
             {% endif %}
 
           <li class="nav-item">
