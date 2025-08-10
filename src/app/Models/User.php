@@ -7,7 +7,8 @@ use App\Services\ImageUploadService;
 use Exception;
 use PDO;
 
-class User{
+class User
+{
 
     /**
      * Busca todos os usuários cadastrados
@@ -31,13 +32,13 @@ class User{
         $sql->execute();
         return $sql->fetch(PDO::FETCH_ASSOC);
     }
-    
+
     public static function getByEmail($email)
     {
         $conn = BD::getConnection();
 
-        $sql = $conn->prepare("SELECT * FROM cadastroUsers WHERE email = :email");
-        $sql->bindValue(":email", $email);
+        $sql = $conn->prepare("SELECT * FROM cadastroUsers WHERE email = :email LIMIT 1");
+        $sql->bindValue(':email', $email);
         $sql->execute();
         return $sql->fetch(PDO::FETCH_ASSOC);
     }
@@ -47,27 +48,32 @@ class User{
      * @param mixed $nome
      * @param mixed $email
      * @param mixed $senha
-     * @param mixed $foto
+     * @param mixed $arquivo
      * @return int
      */
-    public function inserir($nome, $email, $senha, $foto = null)
+    public function inserir($nome, $cpf, $telefone, $email, $senha, $perfil, $arquivo = null)
     {
         $conn = BD::getConnection();
         //criptografa a senha
         $hash = self::hashSenha($senha);
 
-        //Upload da foto
-        if (is_array($foto) and is_uploaded_file($foto['tmp_name'])) {
-            $foto = ImageUploadService::uploadImage($foto);
+        //Upload da arquivo
+        if (is_array($arquivo) and is_uploaded_file($arquivo['tmp_name'])) {
+            $arquivo = ImageUploadService::uploadImage($arquivo);
         }
 
         //Executa o sql de inserção
-        $sql = $conn->prepare("INSERT INTO users(name, email, password, image) VALUES (:name,:mail,:password,:image)");
-        $sql->bindValue(":name", $nome);
-        $sql->bindValue(":mail", $email);
-        $sql->bindValue(":password", $hash);
-        $sql->bindValue(":image", $foto);
-        $sql->execute();
+        $sql = "INSERT INTO cadastroUsers (nome, cpf, telefone, email, senha, perfil, arquivo)
+            VALUES (:nome, :cpf, :telefone, :email, :senha, :perfil, :arquivo)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':nome', $nome);
+        $stmt->bindValue(':cpf', $cpf);
+        $stmt->bindValue(':telefone', $telefone);
+        $stmt->bindValue(':email', $email);
+        $stmt->bindValue(':senha', $hash);
+        $stmt->bindValue(':perfil', $perfil);
+        $stmt->bindValue(':arquivo', $arquivo);
+        $stmt->execute();
 
         //Retorna o ID do usuário criado
         return $conn->lastInsertId();
@@ -79,44 +85,54 @@ class User{
      * @param mixed $nome
      * @param mixed $email
      * @param mixed $senha
-     * @param mixed $foto
+     * @param mixed $arquivo
      * @throws \Exception
      * @return bool
      */
-    public function atualizar($id, $nome, $email, $senha = null, $foto = null)
+    public function atualizar($id, $nome, $cpf, $telefone, $email, $senha = null, $perfil = null, $arquivo = null)
     {
         $conn = BD::getConnection();
 
         //Consulta ao BD
         $user = self::getById($id);
-
         if (!$user) {
             throw new Exception("Usuário não encontrado");
         }
 
+        // if ($senha) {
+        //     //criptografa a senha
+        //     $hash = self::hashSenha($senha);
+        // } else {
+        //     $hash = $user->password;
+        // }
+
+        // mantém senha antiga se não informada
+        $hash = $user['senha'];
         if ($senha) {
-            //criptografa a senha
             $hash = self::hashSenha($senha);
-        } else {
-            $hash = $user->password;
         }
 
-        //Upload da foto, caso seja atualizada
-        if (is_array($foto) and is_uploaded_file($foto['tmp_name'])) {
-            $filename = ImageUploadService::uploadImage($foto);
-
-            ImageUploadService::deleteImage($user->image);
+        //Upload da arquivo, caso seja atualizada
+        if (is_array($arquivo) && is_uploaded_file($arquivo['tmp_name'])) {
+            $filename = ImageUploadService::uploadImage($arquivo);
+            // deletar antigo se existir
+            if (!empty($user['arquivo'])) {
+                ImageUploadService::deleteImage($user['arquivo']);
+            }
         } else {
-            $filename = $user->image;
+            $filename = $user['arquivo'];
         }
 
         //Executa o sql de inserção
-        $sql = $conn->prepare("UPDATE users SET name = :name, email = :mail, password = :password, image = :image WHERE id = :id");
-        $sql->bindValue(":name", $nome);
-        $sql->bindValue(":mail", $email);
-        $sql->bindValue(":password", $hash);
-        $sql->bindValue(":image", $filename);
-        $sql->bindValue(":id", $user->id);
+        $sql = $conn->prepare("UPDATE cadastroUsers SET nome = :nome, cpf = :cpf, telefone = :telefone, email = :email, senha = :senha, perfil = :perfil, arquivo = :arquivo WHERE id = :id");
+        $sql->bindValue(':nome', $nome);
+        $sql->bindValue(':cpf', $cpf);
+        $sql->bindValue(':telefone', $telefone);
+        $sql->bindValue(':email', $email);
+        $sql->bindValue(':senha', $hash);
+        $sql->bindValue(':perfil', $perfil);
+        $sql->bindValue(':arquivo', $filename);
+        $sql->bindValue(':id', $id);
         $sql->execute();
 
         return true;
@@ -155,5 +171,4 @@ class User{
     {
         return password_hash($senha, PASSWORD_BCRYPT);
     }
-
 }

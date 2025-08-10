@@ -11,171 +11,112 @@ use PDOException;
 class UserController
 {
 
-    public function list()
-    {
+    // public function list()
+    // {
+    //     $loader = new FilesystemLoader(__DIR__ . "/../Views");
+    //     $twig = new Environment($loader);
 
-        $loader = new FilesystemLoader(__DIR__ . "/../Views");
-        $twig = new Environment($loader);
+    //     $user = new User();
+    //     $users = $user->getAll();
 
-        $user = new User();
+    //     echo $twig->render("user/index.html.twig", [
+    //         "title" => "Usuários cadastrados",
+    //         "users" => $users
+    //     ]);
+    // }
 
-        $users = $user->getAll();
-
-        echo $twig->render("user/index.html.twig", [
-            "title" => "Usuários cadastrados",
-            "users" => $users
-        ]);
-    }
-
-    public function create()
+    public function cadastro()
     {
         $loader = new FilesystemLoader(__DIR__ . "/../Views");
         $twig = new Environment($loader);
+        $twig->addGlobal('session', $_SESSION);
 
-        echo $twig->render("user/create.html.twig", [
-            "title" => "Cadastro de Usuário"
+        echo $twig->render("user/cadastro.html.twig", [
+            "title" => "Cadastro de Usuário",
+            "mensagemErro" => $_SESSION['erro_cadastro'] ?? null,
+            "mensagemSucesso" => $_SESSION['sucesso_cadastro'] ?? null,
+            "valores" => $_SESSION['valores_cadastro'] ?? []
         ]);
+
+        // Limpa mensagens para não reaparecer
+        unset($_SESSION['erro_cadastro'], $_SESSION['sucesso_cadastro'], $_SESSION['valores_cadastro']);
     }
 
-    public function insert()
+    public function processaCadastro()
     {
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        //Caso continui dando erro voltar
-        // $pass = $_POST['password'];
-        $pass = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $foto = isset($_FILES["image"]) ? $_FILES["image"] : null;
+        session_start(); // garante que a sessão está ativa
 
-        if (is_array($foto)) {
-            $foto = $_FILES["image"]['size'] > 0 ? $_FILES["image"] : null;
+        if (!isset($_SESSION['id'])) {
+            die("Usuário não autenticado.");
         }
 
-        $userModel = new User();
+        $idUsuario = $_SESSION['id'];
 
-        $id = $userModel->inserir($name, $email, $pass, $foto);
+        // Coleta dados
+        $nome = $_POST['nomeCompleto'] ?? '';
+        $cpf = $_POST['cpf'] ?? '';
+        $telefone = $_POST['telefone'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $senha1 = $_POST['senha1'] ?? '';
+        $senha2 = $_POST['senha2'] ?? '';
+        $perfil = $_POST['perfil'] ?? '';
+        $arquivo = (isset($_FILES['arquivo']) && $_FILES['arquivo']['size'] > 0) ? $_FILES['arquivo'] : null;
 
-        if ($id) {
-            header("Location: /users/$id");
-            exit();
-        } else {
-            die("Ocorreu um erro durante o cadastro, tente novamente.");
-        }
-    }
+        // Salva valores para repopular formulário
+        $_SESSION['valores_cadastro'] = $_POST;
 
-    public function edit($id)
-    {
-
-        $userModel = new User();
-
-        $user = $userModel->getById($id);
-
-        if (!$user) {
-            die("Usuário não encontrado!");
-        }
-
-        $user->path_image = ImageUploadService::getPathImage($user->image);
-
-        $loader = new FilesystemLoader(__DIR__ . "/../Views");
-        $twig = new Environment($loader);
-
-        echo $twig->render("user/edit.html.twig", [
-            "title" => "Alteração de Usuário",
-            "user" => $user
-        ]);
-    }
-
-
-    public function update($id)
-    {
-        $userModel = new User();
-
-        $user = $userModel->getById($id);
-
-        if (!$user) {
-            die("Usuário não encontrado!");
+        // Validações
+        if (!$nome || !$cpf || !$telefone || !$email || !$senha1 || !$senha2 || !$perfil) {
+            $_SESSION['erro_cadastro'] = "Preencha todos os campos obrigatórios.";
+            header("Location: /user/cadastro");
+            exit;
         }
 
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        //Caso continui dando erro voltar
-        //$pass = $_POST['password'];
-        $pass = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $foto = isset($_FILES["image"]) ? $_FILES["image"] : null;
+        if ($senha1 !== $senha2) {
+            $_SESSION['erro_cadastro'] = "As senhas não conferem.";
+            header("Location: /user/cadastro");
+            exit;
+        }
 
-        $userModel = new User();
+        if (strlen($senha1) < 8) {
+            $_SESSION['erro_cadastro'] = "A senha deve ter pelo menos 8 caracteres.";
+            header("Location: /user/cadastro");
+            exit;
+        }
 
-        $id = $userModel->atualizar($user->id, $name, $email, $pass, $foto);
+        try {
+            $userModel = new User();
 
-        if ($id) {
-            header("Location: /users");
-            exit();
-        } else {
-            die("Ocorreu um erro durante a atualização do cadastro, tente novamente.");
+            // Verifica e-mail duplicado
+            if ($userModel->getByEmail($email)) {
+                $_SESSION['erro_cadastro'] = "E-mail já cadastrado.";
+                header("Location: /user/cadastro");
+                exit;
+            }
+
+            // Inserção
+            $id = $userModel->inserir($nome, $cpf, $telefone, $email, $senha1, $perfil, $arquivo);
+
+            if ($id) {
+                $_SESSION['id'] = $id;
+                $_SESSION['nome'] = $nome;
+                $_SESSION['perfil'] = $perfil;
+
+                $_SESSION['sucesso_cadastro'] = "Usuário cadastrado com sucesso.";
+                header("Location: /user/cadastro");
+                exit;
+            } else {
+                $_SESSION['erro_cadastro'] = "Erro ao cadastrar, tente novamente.";
+                header("Location: /user/cadastro");
+                exit;
+            }
+        } catch (PDOException $e) {
+            $_SESSION['erro_cadastro'] = "Erro de banco de dados: " . $e->getMessage();
+            header("Location: /user/cadastro");
+            exit;
         }
     }
 
-
-
-    public function view($id)
-    {
-
-        $userModel = new User();
-
-        $user = $userModel->getById($id);
-
-        if (!$user) {
-            die("Usuário não encontrado!");
-        }
-
-        $user->path_image = ImageUploadService::getPathImage($user->image);
-
-        $loader = new FilesystemLoader(__DIR__ . "/../Views");
-        $twig = new Environment($loader);
-
-        echo $twig->render("user/view.html.twig", [
-            "title" => "Visualização de Usuário",
-            "user" => $user
-        ]);
-    }
-
-
-
-    public function confirmDelete($id)
-    {
-
-        $userModel = new User();
-
-        $user = $userModel->getById($id);
-
-        if (!$user) {
-            die("Usuário não encontrado!");
-        }
-
-        $user->path_image = ImageUploadService::getPathImage($user->image);
-
-        $loader = new FilesystemLoader(__DIR__ . "/../Views");
-        $twig = new Environment($loader);
-
-        echo $twig->render("user/delete.html.twig", [
-            "title" => "Exclusão de Usuário",
-            "user" => $user
-        ]);
-    }
-    public function delete($id)
-    {
-        $userModel = new User();
-
-        $user = $userModel->getById($id);
-
-        if (!$user) {
-            die("Usuário não encontrado!");
-        }
-
-        $userModel->delete($user->id);
-
-        header("Location: /users");
-        exit();
-    }
 
     public function logout()
     {
@@ -214,11 +155,6 @@ class UserController
 
                 if ($User) {
                     // Verificar a senha usando SHA2
-                    //Caso continui dando erro voltar
-                    //$senhaDigitadaHash = hash("sha256", $senhaDigitada);
-
-                    //Caso continui dando erro voltar
-                    //if($senhaDigitadaHash === $User["senha"]){
                     if (password_verify($senhaDigitada, $User["senha"])) {
 
                         $_SESSION["logado"] = true;
@@ -249,4 +185,113 @@ class UserController
             "titulo" => "Informações sobre o sistema"
         ]);
     }
+
+    // public function edit($id)
+    // {
+    //     $userModel = new User();
+    //     $user = $userModel->getById($id);
+
+    //     if (!$user) {
+    //         die("Usuário não encontrado!");
+    //     }
+
+    //     $user->path_image = ImageUploadService::getPathImage($user->image);
+
+    //     $loader = new FilesystemLoader(__DIR__ . "/../Views");
+    //     $twig = new Environment($loader);
+
+    //     echo $twig->render("user/edit.html.twig", [
+    //         "title" => "Alteração de Usuário",
+    //         "user" => $user
+    //     ]);
+    // }
+
+
+    // public function cadastro($id)
+    // {
+    //     $userModel = new User();
+
+    //     $user = $userModel->getById($id);
+
+    //     if (!$user) {
+    //         die("Usuário não encontrado!");
+    //     }
+
+    //     $name = $_POST['name'];
+    //     $email = $_POST['email'];
+    //     $pass = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    //     $foto = isset($_FILES["image"]) ? $_FILES["image"] : null;
+
+    //     $userModel = new User();
+
+    //     $id = $userModel->atualizar($user->id, $name, $email, $pass, $foto);
+
+    //     if ($id) {
+    //         header("Location: /user");
+    //         exit();
+    //     } else {
+    //         die("Ocorreu um erro durante a atualização do cadastro, tente novamente.");
+    //     }
+    // }
+
+    // public function view($id)
+    // {
+
+    //     $userModel = new User();
+
+    //     $user = $userModel->getById($id);
+
+    //     if (!$user) {
+    //         die("Usuário não encontrado!");
+    //     }
+
+    //     $user->path_image = ImageUploadService::getPathImage($user->image);
+
+    //     $loader = new FilesystemLoader(__DIR__ . "/../Views");
+    //     $twig = new Environment($loader);
+
+    //     echo $twig->render("user/view.html.twig", [
+    //         "title" => "Visualização de Usuário",
+    //         "user" => $user
+    //     ]);
+    // }
+
+    // public function confirmDelete($id)
+    // {
+
+    //     $userModel = new User();
+
+    //     $user = $userModel->getById($id);
+
+    //     if (!$user) {
+    //         die("Usuário não encontrado!");
+    //     }
+
+    //     $user->path_image = ImageUploadService::getPathImage($user->image);
+
+    //     $loader = new FilesystemLoader(__DIR__ . "/../Views");
+    //     $twig = new Environment($loader);
+
+    //     echo $twig->render("user/delete.html.twig", [
+    //         "title" => "Exclusão de Usuário",
+    //         "user" => $user
+    //     ]);
+    // }
+    // public function delete($id)
+    // {
+    //     $userModel = new User();
+
+    //     $user = $userModel->getById($id);
+
+    //     if (!$user) {
+    //         die("Usuário não encontrado!");
+    //     }
+
+    //     $userModel->delete($user->id);
+
+    //     header("Location: /users");
+    //     exit();
+    // }
+
+
 }

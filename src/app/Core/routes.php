@@ -36,12 +36,12 @@ post('/logar', function () {
   $controller->processaLogin();
 });
 
-get('/cadastro', function ($id) {
+get('/user/cadastro', function () {
   $controller = new UserController();
-  $controller->cadastro($id);
+  $controller->cadastro();
 });
 
-post('/cadastro', function () {
+post('/user/cadastro', function () {
   $controller = new UserController();
   $controller->processaCadastro();
 });
