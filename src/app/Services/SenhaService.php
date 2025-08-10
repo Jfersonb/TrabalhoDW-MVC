@@ -28,7 +28,11 @@ class SenhaService
         // Conteúdo do e-mail
         $titulo = "Reset de Senha - Vida Serena\n\n
         Sua senha foi alterado com sucesso!";
-        $mensagem = "Olá,\n\nSua senha foi redefinida com sucesso.\n\nNova senha: $novaSenha\n\nRecomendamos alterá-la após o login.\n\nAtenciosamente,\nEquipe Vida Serena.";
+        $mensagem = "Olá,
+        \n\nSua senha foi redefinida com sucesso.
+        \n\nNova senha: $novaSenha
+        \n\nRecomendamos alterá-la após o login.
+        \n\nAtenciosamente,\nEquipe Vida Serena.";
         ServicoEmail::enviar($email, $titulo, $mensagem);
 
         return true;
