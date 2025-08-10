@@ -59,14 +59,13 @@ class UserController
         $email = $_POST['email'] ?? '';
         $senha1 = $_POST['senha1'] ?? '';
         $senha2 = $_POST['senha2'] ?? '';
-        $perfil = $_POST['perfil'] ?? '';
         $arquivo = (isset($_FILES['arquivo']) && $_FILES['arquivo']['size'] > 0) ? $_FILES['arquivo'] : null;
 
         // Salva valores para repopular formulário
         $_SESSION['valores_cadastro'] = $_POST;
 
         // Validações
-        if (!$nome || !$cpf || !$telefone || !$email || !$senha1 || !$senha2 || !$perfil) {
+        if (!$nome || !$cpf || !$telefone || !$email || !$senha1 || !$senha2 ) {
             $_SESSION['erro_cadastro'] = "Preencha todos os campos obrigatórios.";
             header("Location: /user/cadastro");
             exit;
@@ -95,12 +94,11 @@ class UserController
             }
 
             // Inserção
-            $id = $userModel->inserir($nome, $cpf, $telefone, $email, $senha1, $perfil, $arquivo);
+            $id = $userModel->inserir($nome, $cpf, $telefone, $email, $senha1, $arquivo);
 
             if ($id) {
                 $_SESSION['id'] = $id;
                 $_SESSION['nome'] = $nome;
-                $_SESSION['perfil'] = $perfil;
 
                 $_SESSION['sucesso_cadastro'] = "Usuário cadastrado com sucesso.";
                 header("Location: /user/cadastro");

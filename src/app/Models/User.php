@@ -51,7 +51,7 @@ class User
      * @param mixed $arquivo
      * @return int
      */
-    public function inserir($nome, $cpf, $telefone, $email, $senha, $perfil, $arquivo = null)
+    public function inserir($nome, $cpf, $telefone, $email, $senha, $arquivo = null)
     {
         $conn = BD::getConnection();
         //criptografa a senha
@@ -64,14 +64,13 @@ class User
 
         //Executa o sql de inserção
         $sql = "INSERT INTO cadastroUsers (nome, cpf, telefone, email, senha, perfil, arquivo)
-            VALUES (:nome, :cpf, :telefone, :email, :senha, :perfil, :arquivo)";
+            VALUES (:nome, :cpf, :telefone, :email, :arquivo)";
         $stmt = $conn->prepare($sql);
         $stmt->bindValue(':nome', $nome);
         $stmt->bindValue(':cpf', $cpf);
         $stmt->bindValue(':telefone', $telefone);
         $stmt->bindValue(':email', $email);
         $stmt->bindValue(':senha', $hash);
-        $stmt->bindValue(':perfil', $perfil);
         $stmt->bindValue(':arquivo', $arquivo);
         $stmt->execute();
 
@@ -89,7 +88,7 @@ class User
      * @throws \Exception
      * @return bool
      */
-    public function atualizar($id, $nome, $cpf, $telefone, $email, $senha = null, $perfil = null, $arquivo = null)
+    public function atualizar($id, $nome, $cpf, $telefone, $email, $senha = null, $arquivo = null)
     {
         $conn = BD::getConnection();
 
@@ -124,13 +123,12 @@ class User
         }
 
         //Executa o sql de inserção
-        $sql = $conn->prepare("UPDATE cadastroUsers SET nome = :nome, cpf = :cpf, telefone = :telefone, email = :email, senha = :senha, perfil = :perfil, arquivo = :arquivo WHERE id = :id");
+        $sql = $conn->prepare("UPDATE cadastroUsers SET nome = :nome, cpf = :cpf, telefone = :telefone, email = :email, senha = :senha, arquivo = :arquivo WHERE id = :id");
         $sql->bindValue(':nome', $nome);
         $sql->bindValue(':cpf', $cpf);
         $sql->bindValue(':telefone', $telefone);
         $sql->bindValue(':email', $email);
         $sql->bindValue(':senha', $hash);
-        $sql->bindValue(':perfil', $perfil);
         $sql->bindValue(':arquivo', $filename);
         $sql->bindValue(':id', $id);
         $sql->execute();

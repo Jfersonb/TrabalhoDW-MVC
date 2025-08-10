@@ -1,15 +1,14 @@
 {% extends 'Base.html.twig' %}
 
 {% block menu %}
-    {{ include('./includes/menu.html.twig') }}
+  {{ include('./includes/menu.html.twig') }}
 {% endblock %}
 {% block principal %}
   <main class="container mt-4">
-    <h2>Cadastro de Usuario</h2>
-    <form id="FormUsuario" method="post" action="/user/cadastro" enctype="multipart/form-data">
+    <form id="loginForm" action="CadastroUsuario.php" method="POST" enctype="multipart/form-data">
       <div class="div-form-selet mb-3">
         <select class="form-select" id="userType" name="userType" required>
-          <option value="" selected>Selecione seu tipo de usuário</option>
+          <option value="0" selected>Selecione seu tipo de usuário</option>
           <option value="1">Familiar</option>
           <option value="2">Cuidador(a)</option>
           <option value="3">Enfermeiro(a)</option>
@@ -123,26 +122,156 @@
       </div>
       <p>Selecione um arquivo para comprovação</p>
 
-      <div class="mb-3">
-        <label class="form-label">Tipo de usuario</label>
-        <div class="form-check">
-          <input class="form-check-input tipo-usuario" type="radio" id="admin" name="tipoUsuario" value="Admin" required />
-          <label class="form-check-label" for="admin">Admin</label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input tipo-usuario" type="radio" id="usuario" name="tipoUsuario" value="Usuario" required />
-          <label class="form-check-label" for="usuario">Comun</label>
-        </div>
-      </div>
-
       <div class="header-btn">
         <button type="submit" class="btn btn-outline-primary">Solicitar</button>
-        <a class="btn btn-outline-warning" href="/">Voltar</a>
+        <a class="btn btn-outline-warning" href="/Index.php">Voltar</a>
       </div>
     </form>
   </main>
 {% endblock %}
 
 {% block js %}
+  <script>
+    function aplicarMascaraTelefone(input) {
+      input.value = input.value
+        .replace(/\D/g, '')
+        .replace(/^(\d{2})(\d)/, '($1) $2')
+        .replace(/(\d{5})(\d)/, '$1-$2')
+        .replace(/(-\d{4})\d+?$/, '$1')
+    }
+    
+    function aplicarMascaraCPF(input) {
+      input.value = input.value
+        .replace(/\D/g, '')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+    }
+  </script>
 
+  <script>
+    let selectType = document.getElementById('userType')
+    
+    selectType.onchange = function () {
+      //Escondo todos os opcionais
+      document.getElementById('dadosFamiliar').classList.add('d-none')
+      document.getElementById('dadosCuidador').classList.add('d-none')
+      document.getElementById('dadosEnfermeiro').classList.add('d-none')
+      document.getElementById('dadosMedico').classList.add('d-none')
+      document.getElementById('dadosIdoso').classList.add('d-none')
+    
+      const type = parseInt(this.value)
+    
+      switch (type) {
+        case 1:
+          //Exibo o bloco de dados do familiar
+          document.getElementById('dadosFamiliar').classList.remove('d-none')
+          break
+    
+        case 2:
+          //Exibo o bloco de dados do cuidador
+          document.getElementById('dadosCuidador').classList.remove('d-none')
+          break
+        case 3:
+          //Exibo o bloco de dados do enfermeiro
+          document.getElementById('dadosEnfermeiro').classList.remove('d-none')
+          break
+        case 4:
+          //Exibo o bloco de dados do médico
+          document.getElementById('dadosMedico').classList.remove('d-none')
+          break
+        case 5:
+          //Exibo o bloco de dados do idoso
+          document.getElementById('dadosIdoso').classList.remove('d-none')
+          break
+    
+        default:
+          console.log(type, typeof type)
+      }
+    }
+    
+    // Mostrar ou ocultar senha
+    document.getElementById('showPassword').addEventListener('change', function () {
+      const senha1 = document.getElementById('senha1')
+      const senha2 = document.getElementById('senha2')
+      const type = this.checked ? 'text' : 'password'
+      senha1.type = type
+      senha2.type = type
+    })
+    
+    // Validação do formulário
+    document.getElementById('loginForm').onsubmit = function (e) {
+      e.preventDefault()
+    
+      const userType = document.getElementById('userType').value
+      const nome = document.getElementById('nomeCompleto').value.trim()
+      const cpf = document.getElementById('cpf').value.trim()
+      const telefone = document.getElementById('telefone').value.trim()
+      const email = document.getElementById('email').value.trim()
+      const senha1 = document.getElementById('senha1').value
+      const senha2 = document.getElementById('senha2').value
+      const arquivo = document.getElementById('arquivo').files[0]
+    
+      if (userType === '0') {
+        alert('Por favor, selecione o tipo de usuário.')
+        return
+      }
+    
+      if (!userType || !nome || !cpf || !telefone || !email || !senha1 || !senha2 || !arquivo) {
+        alert('Todos os campos são obrigatórios.')
+        return
+      }
+    
+      if (senha1 !== senha2) {
+        alert('As senhas não coincidem.')
+        return
+      }
+    
+      if (senha1.length < 8) {
+        alert('A senha deve conter no mínimo 8 caracteres.')
+        return
+      }
+    
+      // Validar campos específicos baseado no tipo de usuário
+      const type = parseInt(userType)
+      let camposEspecificos = true
+    
+      switch (type) {
+        case 1: // Familiar
+          if (!document.getElementById('tipoParentesco').value.trim() || !document.getElementById('endereco').value.trim()) {
+            alert('Por favor, preencha todos os campos obrigatórios do Familiar.')
+            camposEspecificos = false
+          }
+          break
+        case 2: // Cuidador
+          if (!document.getElementById('cursos').value.trim()) {
+            alert('Por favor, preencha o campo de cursos do Cuidador.')
+            camposEspecificos = false
+          }
+          break
+        case 3: // Enfermeiro
+          if (!document.getElementById('coren').value.trim() || !document.getElementById('cip').value.trim()) {
+            alert('Por favor, preencha todos os campos obrigatórios do Enfermeiro.')
+            camposEspecificos = false
+          }
+          break
+        case 4: // Médico
+          if (!document.getElementById('crm').value.trim()) {
+            alert('Por favor, preencha o campo CRM do Médico.')
+            camposEspecificos = false
+          }
+          break
+        case 5: // Idoso
+          if (!document.getElementById('responsavelLegal').value.trim() || !document.getElementById('condicaoMedicaImportante').value.trim() || !document.getElementById('medicamentosUso').value.trim() || !document.getElementById('resticaoAlimentar').value.trim() || !document.getElementById('alergias').value.trim()) {
+            alert('Por favor, preencha todos os campos obrigatórios do Idoso.')
+            camposEspecificos = false
+          }
+          break
+      }
+    
+      if (camposEspecificos) {
+        this.submit()
+      }
+    }
+  </script>
 {% endblock %}
