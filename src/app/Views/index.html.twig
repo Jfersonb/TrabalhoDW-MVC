@@ -52,34 +52,31 @@
       </div>
     </div>
     <p class="container text-center text-dark">Adicionar depois</p>
-    <!--    <div class="header-btn">
-      <a type="button" class="btn btn-outline-primary d-flex justify-content-center" href="/PHP/Logar.php">Logar</a>
-      <a type="button" class="btn btn-outline-secondary d-flex justify-content-center"
-      href="/PHP/CadastroUsuario.php">Novo Usuário</a>
-    </div>    -->
-    {% if session['logado'] is defined and session['logado'] == true %}
-      <div class="header-btn mb-2">
-        <a type="button" class="btn btn-outline-primary d-flex justify-content-center" href="/logout">logout</a>
-      </div>
-    {% else %}
-      <div class="header-btn">
-        <a type="button" class="btn btn-outline-primary d-flex justify-content-center" href="/logar">Logar</a>
-      </div>
-    {% endif %}
 
     {% if session['perfil'] is defined and session['perfil'] == 'admin' %}
       <div class="header-btn mb-2">
-        <a type="button" class="btn btn-outline-primary d-flex justify-content-center" href="#">Novo Usuário</a>
+        <a type="button" class="btn btn-outline-success d-flex justify-content-center" href="#">Cadastrar novo Usuário</a>
       </div>
       <div class="header-btn mb-2">
-        <a type="button" class="btn btn-outline-primary d-flex justify-content-center" href="/medicamento/cadastro">Cadastro Medicamentos</a>
+        <a type="button" class="btn btn-outline-success d-flex justify-content-center" href="/medicamento/cadastro">Cadastrar Medicamentos</a>
       </div>
       <div class="header-btn mb-2">
-        <a type="button" class="btn btn-outline-primary d-flex justify-content-center" href="/medicamento/lista">Lista de Medicamentos</a>
+        <a type="button" class="btn btn-outline-warning d-flex justify-content-center" href="/medicamento/lista">Acessar lista de Medicamentos</a>
+      </div>
+    {% endif %}
+
+    {% if session['logado'] is defined and session['logado'] == true %}
+      <div class="header-btn mb-2">
+        <a type="button" class="btn btn-outline-danger d-flex justify-content-center" href="/logout">logout</a>
+      </div>
+    {% else %}
+      <div class="header-btn">
+        <a type="button" class="btn btn-outline-success d-flex justify-content-center" href="/logar">Logar</a>
       </div>
     {% endif %}
   </main>
 {% endblock %}
+
 {% block rodape %}
   <footer class="footer">
     <a type="button" class="footer-btn btn btn-outline-secondary d-flex justify-content-center" href="/informacao">Sobre</a>
