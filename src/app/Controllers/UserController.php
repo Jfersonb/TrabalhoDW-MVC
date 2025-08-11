@@ -32,6 +32,12 @@ class UserController
 
     public function cadastro()
     {
+
+        if (!isset($_SESSION['id']) || ($_SESSION['perfil'] ?? '') !== 'admin') {
+            $_SESSION['erro_cadastro'] = "Acesso negado. Apenas administradores podem cadastrar usuários.";
+            header("Location: /");
+            exit;
+        }
         $loader = new FilesystemLoader(__DIR__ . "/../Views");
         $twig = new Environment($loader);
         $twig->addGlobal('session', $_SESSION);
@@ -51,8 +57,8 @@ class UserController
     {
         try {
             // Verifica se usuário está logado
-            if (!isset($_SESSION['id'])) {
-                die("Usuário não autenticado.");
+            if (!isset($_SESSION['id']) || ($_SESSION['perfil'] ?? '') !== 'admin') {
+                throw new Exception("Acesso negado. Apenas administradores podem cadastrar usuários.");
             }
 
             $idUsuario = $_SESSION['id'];
