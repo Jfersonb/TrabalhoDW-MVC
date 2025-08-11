@@ -3,10 +3,15 @@
 namespace App\Controllers;
 
 use App\Models\User;
-use App\Services\ImageUploadService;
+use App\Models\CadastroFamilia;
+use App\Models\CadastroCuidador;
+use App\Models\CadastroEnfermeiro;
+use App\Models\CadastroMedico;
+use App\Models\CadastroIdoso;
+use App\Services\FileUploadService;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-use PDOException;
+use Exception;
 
 class UserController
 {
@@ -44,75 +49,99 @@ class UserController
 
     public function processaCadastro()
     {
-        session_start(); // garante que a sessão está ativa
-
-        if (!isset($_SESSION['id'])) {
-            die("Usuário não autenticado.");
-        }
-
-        $idUsuario = $_SESSION['id'];
-
-        // Coleta dados
-        $nome = $_POST['nomeCompleto'] ?? '';
-        $cpf = $_POST['cpf'] ?? '';
-        $telefone = $_POST['telefone'] ?? '';
-        $email = $_POST['email'] ?? '';
-        $senha1 = $_POST['senha1'] ?? '';
-        $senha2 = $_POST['senha2'] ?? '';
-        $arquivo = (isset($_FILES['arquivo']) && $_FILES['arquivo']['size'] > 0) ? $_FILES['arquivo'] : null;
-
-        // Salva valores para repopular formulário
-        $_SESSION['valores_cadastro'] = $_POST;
-
-        // Validações
-        if (!$nome || !$cpf || !$telefone || !$email || !$senha1 || !$senha2 ) {
-            $_SESSION['erro_cadastro'] = "Preencha todos os campos obrigatórios.";
-            header("Location: /user/cadastro");
-            exit;
-        }
-
-        if ($senha1 !== $senha2) {
-            $_SESSION['erro_cadastro'] = "As senhas não conferem.";
-            header("Location: /user/cadastro");
-            exit;
-        }
-
-        if (strlen($senha1) < 8) {
-            $_SESSION['erro_cadastro'] = "A senha deve ter pelo menos 8 caracteres.";
-            header("Location: /user/cadastro");
-            exit;
-        }
-
         try {
+            // Verifica se usuário está logado
+            if (!isset($_SESSION['id'])) {
+                die("Usuário não autenticado.");
+            }
+
+            $idUsuario = $_SESSION['id'];
+
+            // Coleta os dados do formulário
+            $tipo_usuario = $_POST['userType'] ?? '';
+            $nome = trim($_POST['nomeCompleto'] ?? '');
+            $cpf = preg_replace('/\D/', '', $_POST['cpf'] ?? '');
+            $telefone = preg_replace('/\D/', '', $_POST['telefone'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $senha = $_POST['senha1'] ?? '';
+            $senha2 = $_POST['senha2'] ?? '';
+            $arquivo = $_FILES['arquivo'] ?? null;
+
+            // Validações básicas
+            if ($senha !== $senha2) {
+                throw new Exception("As senhas não coincidem.");
+            }
+            if (strlen($senha) < 8) {
+                throw new Exception("A senha deve ter pelo menos 8 caracteres.");
+            }
+
+            // Valida arquivo
+            if (!$arquivo || $arquivo['error'] !== UPLOAD_ERR_OK) {
+                throw new Exception("Erro ao enviar o arquivo.");
+            }
+            $extensao = strtolower(pathinfo($arquivo['name'], PATHINFO_EXTENSION));
+            $permitidos = ['pdf', 'jpg', 'jpeg', 'png'];
+            if (!in_array($extensao, $permitidos)) {
+                throw new Exception("Tipo de arquivo não permitido.");
+            }
+            if ($arquivo['size'] > 10 * 1024 * 1024) {
+                throw new Exception("Arquivo muito grande. Máximo 10MB.");
+            }
+
+            // Cadastra usuário na tabela principal
             $userModel = new User();
+            $id_usuario = $userModel->inserir($nome, $cpf, $telefone, $email, $senha, $arquivo);
 
-            // Verifica e-mail duplicado
-            if ($userModel->getByEmail($email)) {
-                $_SESSION['erro_cadastro'] = "E-mail já cadastrado.";
-                header("Location: /user/cadastro");
-                exit;
+            // Insere dados específicos
+            switch ($tipo_usuario) {
+                case "1": // Familiar
+                    $parentesco = $_POST['tipoParentesco'] ?? '';
+                    $endereco = $_POST['endereco'] ?? '';
+                    CadastroFamilia::inserir($id_usuario, $parentesco, $endereco);
+                    break;
+                case "2": // Cuidador
+                    $cursos = $_POST['cursos'] ?? '';
+                    CadastroCuidador::inserir($id_usuario, $cursos);
+                    break;
+                case "3": // Enfermeiro
+                    $coren = $_POST['coren'] ?? '';
+                    $cip = $_POST['cip'] ?? '';
+                    CadastroEnfermeiro::inserir($id_usuario, $coren, $cip);
+                    break;
+                case "4": // Médico
+                    $crm = $_POST['crm'] ?? '';
+                    CadastroMedico::inserir($id_usuario, $crm);
+                    break;
+                case "5": // Idoso
+                    $responsavel = $_POST['responsavelLegal'] ?? '';
+                    $condicao = $_POST['condicaoMedicaImportante'] ?? '';
+                    $medicamentos = $_POST['medicamentosUso'] ?? '';
+                    $restricao = $_POST['resticaoAlimentar'] ?? '';
+                    $alergias = $_POST['alergias'] ?? '';
+                    CadastroIdoso::inserir($id_usuario, $responsavel, $condicao, $medicamentos, $restricao, $alergias);
+                    break;
+                default:
+                    throw new Exception("Tipo de usuário inválido.");
             }
 
-            // Inserção
-            $id = $userModel->inserir($nome, $cpf, $telefone, $email, $senha1, $arquivo);
-
-            if ($id) {
-                $_SESSION['id'] = $id;
-                $_SESSION['nome'] = $nome;
-
-                $_SESSION['sucesso_cadastro'] = "Usuário cadastrado com sucesso.";
-                header("Location: /user/cadastro");
-                exit;
-            } else {
-                $_SESSION['erro_cadastro'] = "Erro ao cadastrar, tente novamente.";
-                header("Location: /user/cadastro");
-                exit;
-            }
-        } catch (PDOException $e) {
-            $_SESSION['erro_cadastro'] = "Erro de banco de dados: " . $e->getMessage();
+            // Redireciona com sucesso
+            $_SESSION['sucesso_cadastro'] = "Cadastro realizado com sucesso!";
+            header("Location: /Index.php?msg=sucesso");
+            exit;
+        } catch (Exception $e) {
+            $_SESSION['erro_cadastro'] = $e->getMessage();
+            $_SESSION['valores_cadastro'] = $_POST;
             header("Location: /user/cadastro");
             exit;
         }
+    }
+
+
+
+    private function render($view, $params = [])
+    {
+        global $twig; // se estiver usando container, injete
+        return $twig->render($view, $params);
     }
 
 
@@ -167,7 +196,7 @@ class UserController
                 } else {
                     $this->logar("Senha ou usuário incorreto!");
                 }
-            } catch (PDOException $e) {
+            } catch (Exception $e) {
                 $mensagemErro = "Erro de banco de dados: " . $e->getMessage();
             }
         }

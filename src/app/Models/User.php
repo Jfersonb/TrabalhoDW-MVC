@@ -54,25 +54,24 @@ class User
     public function inserir($nome, $cpf, $telefone, $email, $senha, $arquivo = null)
     {
         $conn = BD::getConnection();
-        //criptografa a senha
-        $hash = self::hashSenha($senha);
 
         //Upload da arquivo
-        if (is_array($arquivo) and is_uploaded_file($arquivo['tmp_name'])) {
-            $arquivo = ImageUploadService::uploadImage($arquivo);
+        $extensao = strtolower(pathinfo($arquivo['name'], PATHINFO_EXTENSION));
+        $nomeArquivo = uniqid() . '.' . $extensao;
+        $destino = __DIR__ . '/../../public/arquivos/' . $nomeArquivo;
+
+        if (!move_uploaded_file($arquivo['tmp_name'], $destino)) {
+            throw new Exception("Falha ao mover o arquivo enviado.");
         }
 
+        // Hash da senha
+        $hashSenha = password_hash($senha, PASSWORD_DEFAULT);
+
         //Executa o sql de inserção
-        $sql = "INSERT INTO cadastroUsers (nome, cpf, telefone, email, senha, perfil, arquivo)
+        $sql = "INSERT INTO cadastroUsers (nome, cpf, telefone, email, senha, arquivo)
             VALUES (:nome, :cpf, :telefone, :email, :arquivo)";
         $stmt = $conn->prepare($sql);
-        $stmt->bindValue(':nome', $nome);
-        $stmt->bindValue(':cpf', $cpf);
-        $stmt->bindValue(':telefone', $telefone);
-        $stmt->bindValue(':email', $email);
-        $stmt->bindValue(':senha', $hash);
-        $stmt->bindValue(':arquivo', $arquivo);
-        $stmt->execute();
+        $stmt->execute([$nome, $cpf, $telefone, $email, $hashSenha, $nomeArquivo]);
 
         //Retorna o ID do usuário criado
         return $conn->lastInsertId();
@@ -130,7 +129,6 @@ class User
         $sql->bindValue(':email', $email);
         $sql->bindValue(':senha', $hash);
         $sql->bindValue(':arquivo', $filename);
-        $sql->bindValue(':id', $id);
         $sql->execute();
 
         return true;
