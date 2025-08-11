@@ -3,12 +3,15 @@
 {% block menu %}
   {{ include('./includes/menu.html.twig') }}
 {% endblock %}
+
 {% block principal %}
   <main class="container mt-4">
-    <form id="loginForm" action="CadastroUsuario.php" method="POST" enctype="multipart/form-data">
+    <form id="cadastroForm" method="POST" action="/user/cadastro"  enctype="multipart/form-data">
+
+      <!-- Tipo de usuário -->
       <div class="div-form-selet mb-3">
         <select class="form-select" id="userType" name="userType" required>
-          <option value="0" selected>Selecione seu tipo de usuário</option>
+          <option value="" selected>Selecione seu tipo de usuário</option>
           <option value="1">Familiar</option>
           <option value="2">Cuidador(a)</option>
           <option value="3">Enfermeiro(a)</option>
@@ -16,46 +19,37 @@
           <option value="5">Idoso</option>
         </select>
       </div>
+
+      <!-- Dados básicos -->
       <div class="form-group mb-3">
-        <label for="exampleInputtxt">Nome</label>
+        <label>Nome</label>
         <input type="text" id="nomeCompleto" name="nomeCompleto" class="form-control" placeholder="Informe seu nome completo" required />
       </div>
 
       <div class="form-group mb-3">
-        <label for="exampleInputtxt">CPF</label>
+        <label>CPF</label>
         <input type="text" id="cpf" name="cpf" class="form-control" placeholder="000.000.000-00" oninput="aplicarMascaraCPF(this)" required />
       </div>
 
       <div class="form-group mb-3">
-        <label for="exampleInputtxt">Telefone</label>
+        <label>Telefone</label>
         <input type="text" id="telefone" name="telefone" class="form-control" placeholder="(99) 99999-9999" oninput="aplicarMascaraTelefone(this)" required />
       </div>
 
       <div class="form-group mb-3">
-        <label for="exampleInputEmail1">E-mail</label>
+        <label>E-mail</label>
         <input type="email" id="email" name="email" class="form-control" placeholder="Informe seu e-mail" required />
       </div>
 
-      <div class="d-none" id="dadosEnfermeiro">
-        <h4>Dados obrigatórios do Enfermeiro</h4>
-        <div class="form-group mb-3">
-          <label for="exampleInputtxt">COREN</label>
-          <input type="text" id="coren" name="coren" class="form-control" placeholder="Informe seu COREN" />
-        </div>
-        <div class="form-group mb-3">
-          <label for="exampleInputtxt">CIP</label>
-          <input type="text" id="cip" name="cip" class="form-control" placeholder="Informe seu CIP" />
-        </div>
-      </div>
-
+      <!-- Dados específicos por tipo -->
       <div class="d-none" id="dadosFamiliar">
         <h4>Dados obrigatórios do Familiar</h4>
         <div class="form-group mb-3">
-          <label for="exampleInputtxt">Tipo de parentesco</label>
+          <label>Tipo de parentesco</label>
           <input type="text" id="tipoParentesco" name="tipoParentesco" class="form-control" placeholder="Informe seu parentesco" />
         </div>
         <div class="form-group mb-3">
-          <label for="exampleInputtxt">Endereço</label>
+          <label>Endereço</label>
           <input type="text" id="endereco" name="endereco" class="form-control" placeholder="Informe seu endereço" />
         </div>
       </div>
@@ -63,15 +57,27 @@
       <div class="d-none" id="dadosCuidador">
         <h4>Dados obrigatórios do Cuidador</h4>
         <div class="form-group mb-3">
-          <label for="exampleInputtxt">Cursos</label>
+          <label>Cursos</label>
           <input type="text" id="cursos" name="cursos" class="form-control" placeholder="Informe cursos realizados caso tenha" />
+        </div>
+      </div>
+
+      <div class="d-none" id="dadosEnfermeiro">
+        <h4>Dados obrigatórios do Enfermeiro</h4>
+        <div class="form-group mb-3">
+          <label>COREN</label>
+          <input type="text" id="coren" name="coren" class="form-control" placeholder="Informe seu COREN" />
+        </div>
+        <div class="form-group mb-3">
+          <label>CIP</label>
+          <input type="text" id="cip" name="cip" class="form-control" placeholder="Informe seu CIP" />
         </div>
       </div>
 
       <div class="d-none" id="dadosMedico">
         <h4>Dados obrigatórios do Médico</h4>
         <div class="form-group mb-3">
-          <label for="exampleInputtxt">CRM</label>
+          <label>CRM</label>
           <input type="text" id="crm" name="crm" class="form-control" placeholder="Informe seu CRM" />
         </div>
       </div>
@@ -79,49 +85,54 @@
       <div class="d-none" id="dadosIdoso">
         <h4>Dados obrigatórios do Idoso</h4>
         <div class="form-group mb-3">
-          <label for="exampleInputtxt">Responsável legal</label>
+          <label>Responsável legal</label>
           <input type="text" id="responsavelLegal" name="responsavelLegal" class="form-control" placeholder="Informe o nome do responsável legal" />
         </div>
         <div class="form-group mb-3">
-          <label for="exampleInputtxt">Condições médicas importantes</label>
+          <label>Condições médicas importantes</label>
           <input type="text" id="condicaoMedicaImportante" name="condicaoMedicaImportante" class="form-control" placeholder="Informe as condições médicas importantes" />
         </div>
         <div class="form-group mb-3">
-          <label for="exampleInputtxt">Medicamentos de uso</label>
+          <label>Medicamentos de uso</label>
           <input type="text" id="medicamentosUso" name="medicamentosUso" class="form-control" placeholder="Informe os medicamentos de uso do idoso" />
         </div>
         <div class="form-group mb-3">
-          <label for="exampleInputtxt">Restrições alimentar</label>
-          <input type="text" id="resticaoAlimentar" name="resticaoAlimentar" class="form-control" placeholder="Informe as restições alimentares" />
+          <label>Restrições alimentares</label>
+          <input type="text" id="restricaoAlimentar" name="restricaoAlimentar" class="form-control" placeholder="Informe as restrições alimentares" />
         </div>
         <div class="form-group mb-3">
-          <label for="exampleInputtxt">Alergias</label>
-          <input type="text" id="alergias" name="alergias" class="form-control" placeholder="Informe as alergias dos idoso" />
+          <label>Alergias</label>
+          <input type="text" id="alergias" name="alergias" class="form-control" placeholder="Informe as alergias do idoso" />
         </div>
       </div>
 
+      <!-- Senhas -->
       <div class="form-group mb-3">
-        <label for="inputPassword1">Senha</label>
+        <label>Senha</label>
         <input type="password" id="senha1" name="senha1" class="form-control" placeholder="Crie uma senha" required />
       </div>
 
       <div class="form-group mb-3">
-        <label for="inputPassword2">Repita a Senha</label>
+        <label>Repita a Senha</label>
         <input type="password" id="senha2" name="senha2" class="form-control" placeholder="Repita a senha" required />
       </div>
 
-      <div id="passwordHelpBlock" class="form-text mb-3">Sua senha deve ter pelo menos 8 caracteres.</div>
+      <div id="passwordHelpBlock" class="form-text mb-3">
+        Sua senha deve ter pelo menos 8 caracteres.
+      </div>
 
       <div class="form-check mb-3">
         <input type="checkbox" class="form-check-input" id="showPassword" />
         <label class="form-check-label" for="showPassword">Mostrar senha</label>
       </div>
 
+      <!-- Arquivo -->
       <div class="input mb-3">
         <input type="file" class="form-control" id="arquivo" name="arquivo" accept=".pdf,.jpg,.jpeg,.png" required />
       </div>
       <p>Selecione um arquivo para comprovação</p>
 
+      <!-- Botões -->
       <div class="header-btn">
         <button type="submit" class="btn btn-outline-primary">Solicitar</button>
         <a class="btn btn-outline-warning" href="/">Voltar</a>
@@ -131,5 +142,27 @@
 {% endblock %}
 
 {% block js %}
- 
+<script>
+  document.getElementById('userType').addEventListener('change', function() {
+    const allSections = ['dadosFamiliar', 'dadosCuidador', 'dadosEnfermeiro', 'dadosMedico', 'dadosIdoso'];
+    allSections.forEach(id => document.getElementById(id).classList.add('d-none'));
+
+    switch (this.value) {
+      case '1': document.getElementById('dadosFamiliar').classList.remove('d-none'); break;
+      case '2': document.getElementById('dadosCuidador').classList.remove('d-none'); break;
+      case '3': document.getElementById('dadosEnfermeiro').classList.remove('d-none'); break;
+      case '4': document.getElementById('dadosMedico').classList.remove('d-none'); break;
+      case '5': document.getElementById('dadosIdoso').classList.remove('d-none'); break;
+    }
+  });
+
+  // Mostrar/ocultar senha
+  document.getElementById('showPassword').addEventListener('change', function() {
+    const senha1 = document.getElementById('senha1');
+    const senha2 = document.getElementById('senha2');
+    const type = this.checked ? 'text' : 'password';
+    senha1.type = type;
+    senha2.type = type;
+  });
+</script>
 {% endblock %}
